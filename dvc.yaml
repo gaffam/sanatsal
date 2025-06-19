@@ -1,0 +1,8 @@
+stages:
+  train:
+    cmd: python train_model.py --tune --trials 30
+    deps:
+      - risk_analyzer.py
+      - data/train.csv
+    outs:
+      - models/model.joblib
