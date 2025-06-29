@@ -19,6 +19,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Train risk prediction model")
     parser.add_argument("--tune", action="store_true", help="Use Optuna tuning")
     parser.add_argument("--trials", type=int, default=20, help="Number of Optuna trials")
+
     parser.add_argument(
         "--limit",
         type=int,
@@ -34,6 +35,15 @@ def main() -> None:
     else:
         sqlite_storage.init_db(DB_PATH)
         df = sqlite_storage.query_latest(DB_PATH, limit=limit)
+
+    args = parser.parse_args()
+
+    if DB_URL:
+        df = timescale_storage.query_range_ts(DB_URL, limit=1000)
+    else:
+        sqlite_storage.init_db(DB_PATH)
+        df = sqlite_storage.query_latest(DB_PATH, limit=1000)
+ main
 
     df = add_risk_column(df)
     if args.tune:
