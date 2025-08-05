@@ -30,7 +30,18 @@ async def require_api_key(x_api_key: str = Header(default="")):
 setup_logging()
 logger = structlog.get_logger(__name__)
 
+
+async def lifespan(app: FastAPI):
+    if ASYNC:
+        await storage.init_db(DB_PATH)
+    else:
+        await asyncio.to_thread(storage.init_db, DB_PATH)
+    yield
+
+app = FastAPI(title="Banksia API", lifespan=lifespan)
+
 app = FastAPI(title="Weather Data API")
+
 
 redis_url = os.getenv("REDIS_URL")
 app.add_middleware(RateLimitMiddleware, max_requests=100, window=60, redis_url=redis_url)
@@ -55,12 +66,14 @@ class WeatherRecord(BaseModel):
     humidity: float
     wind_speed: float
 
+
 @app.on_event("startup")
 async def setup_db() -> None:
     if ASYNC:
         await storage.init_db(DB_PATH)
     else:
         await asyncio.to_thread(storage.init_db, DB_PATH)
+> main
 
 @app.get("/api/latest-data", response_model=List[WeatherRecord])
 async def latest_data(limit: int = 100, _=Depends(require_api_key)):

@@ -8,7 +8,17 @@ from risk_analyzer import add_risk_column, load_model, predict_with_model
 from fastapi_app import WeatherRecord
 from pydantic import BaseModel
 
+
+async def lifespan(app: FastAPI):
+    global _model
+    if MODEL_PATH.exists():
+        _model = load_model(str(MODEL_PATH))
+    yield
+
+app = FastAPI(title="Risk Service", lifespan=lifespan)
+
 app = FastAPI(title="Risk Service")
+ main
 DB_PATH = Path(os.getenv("WEATHER_DB", "weather.db"))
 DB_URL = os.getenv("TIMESCALE_URL")
 MODEL_PATH = Path(os.getenv("MODEL_PATH", "models/model.joblib"))
@@ -18,11 +28,14 @@ _model = None
 class WeatherRecordWithRisk(WeatherRecord):
     risk: float
 
+
+
 @app.on_event("startup")
 def load_model_on_startup() -> None:
     global _model
     if MODEL_PATH.exists():
         _model = load_model(str(MODEL_PATH))
+main
 
 @app.get("/risk", response_model=List[WeatherRecord])
 async def risk(limit: int = 100):

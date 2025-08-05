@@ -1,4 +1,8 @@
 import pandas as pd
+
+import pytest
+
+ main
 from risk_analyzer import (
     add_risk_column,
     risk_score,
@@ -21,6 +25,20 @@ def test_risk_score_with_brightness():
     assert score > 0
 
 
+
+def test_risk_score_seasonal_regional():
+    row = pd.Series({
+        "temp": 25,
+        "humidity": 60,
+        "wind_speed": 5,
+        "district": "Antalya",
+        "date": "2024-07-01",
+    })
+    score = risk_score(row)
+    assert score > 0
+
+
+ main
 def test_add_risk_column():
     df = pd.DataFrame([
         {"district": "A", "date": "2024-01-01", "temp": 30, "humidity": 40, "wind_speed": 10},
@@ -31,6 +49,19 @@ def test_add_risk_column():
     assert len(out) == 2
 
 
+
+def test_add_risk_column_vectorized():
+    df = pd.DataFrame([
+        {"district": "Antalya", "date": "2024-07-02", "temp": 30, "humidity": 40, "wind_speed": 10},
+        {"district": "Izmir", "date": "2024-01-02", "temp": 15, "humidity": 80, "wind_speed": 5},
+    ])
+    out = add_risk_column(df)
+    manual = df.apply(risk_score, axis=1)
+    assert out["risk"].tolist() == manual.tolist()
+
+
+
+ main
 def test_random_forest_prediction():
     df = pd.DataFrame([
         {"temp": 30, "humidity": 40, "wind_speed": 10},
@@ -56,6 +87,9 @@ def test_merge_with_modis():
 
 
 def test_tune_random_forest():
+
+    pytest.importorskip("optuna")
+ main
     df = pd.DataFrame([
         {"temp": 30, "humidity": 40, "wind_speed": 10},
         {"temp": 20, "humidity": 50, "wind_speed": 5},

@@ -1,4 +1,12 @@
+
+# Banksia
+
+**Türkçe**: Banksia, başta orman yangınları olmak üzere çevresel tüm yangın risklerini hesaplamak, gözlemlemek ve haber vermek için bağımsız bir yazılımcı tarafından geliştirilen açık projedir. Amaç, en ücra yerleşim birimlerinde bile düşük gereksinimlerle çalışabilen bir sistem kurmaktır. Proje henüz tamamlanmamış olup katkılara açıktır. Lütfen etik ilkelere bağlı kalınız. Lisans "F.U.C.K. \u2014 Freedom Under Conditioned Knowledge" olarak adlandırılır.
+
+**English**: Banksia is an independent effort to compute, monitor and alert wildfire risk across Turkey. It gathers weather data and satellite observations, trains machine learning models and serves results through a FastAPI backend with a Vue dashboard. The project is still evolving and contributions are welcome, provided privacy and personal data are respected. Licensed under **F.U.C.K. \u2014 Freedom Under Conditioned Knowledge**.
+=======
 # Turkey Fire Risk Detection System
+
 
 This project collects weather data from the MGM API and stores it in a database. By default SQLite is used, but a TimescaleDB/PostgreSQL instance can be configured for large datasets. A FastAPI service exposes recent records and statistics, and a lightweight Vue dashboard visualizes the data.
 
@@ -166,3 +174,9 @@ The training pipeline can optimize RandomForest parameters with Optuna:
 ```bash
 python train_model.py --tune --trials 30
 ```
+<<
+
+## License
+
+This project is distributed under the **F.U.C.K.\u2014Freedom Under Conditioned Knowledge** license. See the `LICENSE` file for details.
+
